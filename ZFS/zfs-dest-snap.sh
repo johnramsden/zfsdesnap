@@ -30,6 +30,17 @@ do
       echo "${snapdate} is older than ${destroydate}"
       echo "and begins with ${prefix}"
       echo
+
+      read -p "Do you wish to destroy this snapshot?" yn
+      case $yn in
+          [Yy]* ) echo "destroying ${snapshot}";
+            echo "Des"
+          ;;
+          [Nn]* )
+          ;;
+          * ) echo "Please answer yes or no."
+          ;;
+      esac
     fi
   fi
 done
