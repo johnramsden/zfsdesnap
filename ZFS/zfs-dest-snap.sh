@@ -4,7 +4,7 @@
 # with date format +%Y-%m-%d-%H%M%S
 
 beginswith() {
-  echo "Testing if ${2} beginswith ${1}"
+  #echo "Testing if ${2} beginswith ${1}"
   case ${2} in
     "${1}"*) true
     ;;
@@ -24,16 +24,14 @@ do
     | grep -Eo '[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}-[[:digit:]]{6}'  \
     | tr -d "-"`
 
-  echo "Date: ${snapdate}"
-
   if  [ -n "${snapdate}" ] && [ "${snapdate}" -le "${destroydate}" ]; then
-    echo "For snapshot: ${snapshot}"
-    echo "${snapdate} is less than ${destroydate}"
     if beginswith "${prefix}" `echo "${snapshot}" | sed "s:${dataset}@::"`; then
-      echo "${snapshot}"
+      echo "For snapshot: ${snapshot}"
+      echo "${snapdate} is older than ${destroydate}"
+      echo "and begins with ${prefix}"
+      echo
     fi
   fi
-  echo
 done
 
 # grep gets
