@@ -1,6 +1,8 @@
 #!/bin/sh
+# Created by John Ramsden
+# github: johnramsden
 
-# Destroy all snapshots with prefix ${1} after date ${2}
+# Destroy all snapshots before a certain date based off name
 # with date format +%Y-%m-%d-%H%M%S
 
 # Options:
