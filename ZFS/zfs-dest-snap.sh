@@ -7,15 +7,16 @@
 # -n: print what will happen but do nothing
 # -a: ask before destroying
 # -p: Add a prefix
-# -d: Add a dataset
+# -r: Add a dataset
+# -d: Date REQUIRED
 
-# e.g. zdestsnap -n -p "pre-ins" -d "tank/home" "2016-06-07-155650"
+# e.g. zdestsnap -n -p "pre-ins" -r "tank/home" -d "2016-06-07-155650"
 # This will print what will happen to all snapshots of
 # "tank/home" before"2016-06-07-155650"
 
 # disable the verbose error handling by preceding the whole option string with a colon (:):
 
-while getopts ":anp:d:" opt; do
+while getopts ":nap:r:d:" opt; do
   case $opt in
     n)
       echo "Running in test mode, will not destroy anything"
@@ -27,15 +28,23 @@ while getopts ":anp:d:" opt; do
       echo "Running with prefix: ${OPTARG}"
       prefix="${OPTARG}"
       ;;
-    d)
-      echo "Add a dataset: ${OPTARG}"
+    r)
+      echo "Running with dataset: ${OPTARG}"
       dataset="${OPTARG}"
+      ;;
+    d)
+      echo "Date: ${OPTARG}"
+      datebefore="${OPTARG}"
       ;;
     \?)
       echo "Invalid option: -${OPTARG}" >&2
       ;;
   esac
 done
+
+echo "${prefix}"
+echo "${dataset}"
+echo "${datebefore}"
 
 beginswith() {
   #echo "Testing if ${2} beginswith ${1}"
@@ -54,7 +63,7 @@ beginswith() {
 # dataset="${1}"
 # prefix="${2}"
 # # Remove hyphen frome date +%Y-%m-%d-%H%M%S
-# destroydate=`echo "${3}"  | tr -d "-"`
+# destroydate=`echo "${datebefore}"  | tr -d "-"`
 #
 # for snapshot in `zfs list -H -t snapshot -r "${dataset}" | cut -f 1`
 # do
