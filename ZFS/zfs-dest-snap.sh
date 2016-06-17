@@ -56,14 +56,29 @@ beginswith() {
   esac;
 }
 
-# echo "OPTIND: ${OPTIND}"
-# shift $((${OPTIND} - 1))
-# echo "OPTIND Shifted: ${OPTIND}"
+echo "${datebefore+set}"
 
-# dataset="${1}"
-# prefix="${2}"
+if [ -n "${datebefore+set}" ]; then
+  echo "Destroy before date was set to ${datebefore}"
+  echo "Removing hyphens"
+  destroydate=`echo "${datebefore}"  | tr -d "-"`
+  echo "Destroydate: ${destroydate}"
+
+  if [ -n "${dataset+set}" ]; then
+    echo "Running with dataset ${dataset}"
+    snaps=`zfs list -H -t snapshot -r "${dataset}" | cut -f 1`
+    echo "${snaps}"
+  else
+    echo "Running on all datasets"
+    snaps=`zfs list -H -t snapshot | cut -f 1`
+    echo "${snaps}"
+  fi
+else
+  echo 'Destroy before date was not set, please set a date using -d'
+fi
+
 # # Remove hyphen frome date +%Y-%m-%d-%H%M%S
-# destroydate=`echo "${datebefore}"  | tr -d "-"`
+
 #
 # for snapshot in `zfs list -H -t snapshot -r "${dataset}" | cut -f 1`
 # do
