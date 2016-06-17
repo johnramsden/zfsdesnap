@@ -24,6 +24,32 @@ beginswith() {
   esac;
 }
 
+destsnap(){
+  if [ ${ask} -eq 1 ]; then
+    echo "Do you wish to destroy this snapshot?"
+    read yn
+    case $yn in
+        [Yy]* ) echo "destroying ${1}";
+          if [ ${testmode} -eq 0 ]; then
+            zfs destroy "${1}"
+            echo "DESTROYED: ${1}"
+          fi
+          echo
+        ;;
+        [Nn]* ) echo
+        ;;
+        * ) echo "Please answer yes or no."
+        ;;
+    esac
+  else
+    echo "destroying ${1}";
+    if [ ${testmode} -eq 0 ]; then
+      zfs destroy "${1}"
+      echo "DESTROYED: ${1}"
+    fi
+  fi
+}
+
 checksnaps() {
   for snapshot in ${1}
   do
@@ -33,28 +59,11 @@ checksnaps() {
 
     if  [ -n "${snapdate}" ] && [ "${snapdate}" -le "${destroydate}" ]; then
       if beginswith "${prefix}" `echo "${snapshot}" | sed "s:${dataset}@::"`; then
-
-        echo "For snapshot: ${snapshot}"
-        echo "${snapdate} is older than ${destroydate}"
-        echo "and begins with ${prefix}"
         echo
-
-        if [ ${ask} -eq 1 ]; then
-          read -p "Do you wish to destroy this snapshot?" yn
-          case $yn in
-              [Yy]* ) echo "destroying ${snapshot}";
-                #zfs destroy "${snapshot}"
-                echo
-              ;;
-              [Nn]* ) echo
-              ;;
-              * ) echo "Please answer yes or no."
-              ;;
-          esac
-        else
-          echo "destroying ${snapshot}";
-          #zfs destroy "${snapshot}"
-        fi
+        echo "For snapshot: ${snapshot}"
+        echo "${snapdate} is older than: ${destroydate}"
+        echo "and begins with: ${prefix}"
+        destsnap "${snapshot}"
       fi
     fi
   done
@@ -70,17 +79,18 @@ checksnaps() {
 ############# MAIN CODE #############
 #####################################
 
-# disable the verbose error handling by preceding the whole option string with a colon (:):
-
 ask="0"
+testmode="0"
 
+# disable the verbose error handling by preceding the whole option string with a colon (:):
 while getopts ":nap:r:d:" opt; do
   case $opt in
     n)
       echo "Running in test mode, will not destroy anything"
+      testmode="1"
       ;;
     a)
-      echo "Ask before destroying"
+      echo "Running in ask before destroying mode."
       ask="1"
       ;;
     p)
