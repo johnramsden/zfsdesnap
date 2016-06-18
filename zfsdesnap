@@ -54,12 +54,14 @@ destsnap(){
 checksnaps() {
   for snapshot in ${1}
   do
+    #echo "Checking: ${snapshot} for ${2}" # Debug
     snapdate=`echo "${snapshot}"  \
       | grep -Eo '[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}-[[:digit:]]{6}'  \
       | tr -d "-"`
 
     if  [ -n "${snapdate}" ] && [ "${snapdate}" -le "${destroydate}" ]; then
-      if beginswith "${prefix}" `echo "${snapshot}" | sed "s:${dataset}@::"`; then
+
+      if beginswith "${prefix}" `echo "${snapshot}" | sed "s:${2}@::"`; then
         echo
         echo "For snapshot: ${snapshot}"
         echo "${snapdate} is older than: ${destroydate}"
@@ -108,6 +110,7 @@ while getopts ":nap:r:d:" opt; do
       ;;
     \?)
       echo "Invalid option: -${OPTARG}" >&2
+      exit
       ;;
   esac
 done
@@ -123,11 +126,11 @@ if [ -n "${datebefore+set}" ]; then
   if [ -n "${dataset+set}" ]; then
     echo "Running on dataset ${dataset}"
     snaps=`zfs list -H -t snapshot -r "${dataset}" | cut -f 1`
-    checksnaps "${snaps}"
+    checksnaps "${snaps}" "${dataset}"
   else
     echo "Running on all datasets"
     snaps=`zfs list -H -t snapshot | cut -f 1`
-    checksnaps "${snaps}"
+    checksnaps "${snaps}" ".*"
   fi
 else
   echo 'Destroy before date was not set, please set a date using -d'
