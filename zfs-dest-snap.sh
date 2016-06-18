@@ -17,7 +17,6 @@
 # "tank/home" before"2016-06-07-155650"
 
 beginswith() {
-  #echo "Testing if ${2} beginswith ${1}"
   case ${2} in
     "${1}"*) true
     ;;
@@ -133,5 +132,3 @@ if [ -n "${datebefore+set}" ]; then
 else
   echo 'Destroy before date was not set, please set a date using -d'
 fi
-
-# # Remove hyphen frome date +%Y-%m-%d-%H%M%S
