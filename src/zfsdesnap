@@ -51,6 +51,12 @@ destsnap(){
   fi
 }
 
+
+# Checksnaps function:
+# Parmaters:
+# 1: list of snapshots
+# 2: dataset to check
+# Checks all the snapshots to see if they are older than the destroy date, and if they are destroys them.
 checksnaps() {
   for snapshot in ${1}
   do
