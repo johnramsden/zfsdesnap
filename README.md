@@ -19,7 +19,7 @@ zfsdesnap -p "pre-install" -d "$(date -d '1 week ago' +%Y-%m-%d-%H%M%S)"
 * ```-n``` (Optional) Run in test mode, will not destroy anything.
 * ```-a``` (Optional) Ask before destroying snapshot.
 * ```-r``` (Optional) Run only on specified dataset.
-* 
+
 ### systemd Units
 
 To use routinely with the provided systemd units, move them into the location your system keeps user units in, most likely ```/etc/systemd/system```.
