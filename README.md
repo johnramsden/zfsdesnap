@@ -4,7 +4,7 @@ Tool to destroy all ZFS snapshots before a certain date, based off name and date
 
 ## Usage
 
-To use the script, call it with a specified date that all snapshots should be destroyed before. Optionally a specific dataset can be given with ```-d``` and prefix with ```-p```.
+To use the script, name snapshots in the format ```zpool@${prefix}-$(date +%Y-%m-%d-%H%M%S)```, then call ```zfsdesnap``` with a specified date that all snapshots should be destroyed before. Optionally a specific dataset can be given with ```-d``` and prefix with ```-p```.
 
 For example, to destroy all snapshots with the prefix "pre-install":
 
