@@ -22,4 +22,14 @@ For example, to destroy all snapshots with the prefix "pre-install":
 
 ### systemd Units
 
-To use with provided systemd units, move them into the location your system keeps user units in, most likely ```/etc/systemd/system```
+To use routinely with the provided systemd units, move them into the location your system keeps user units in, most likely ```/etc/systemd/system```.
+
+Next specify each prefix you would like to be delete and start or enable the timer.
+
+So for the prefix "pre-install":
+
+```shell
+systemctl enable zfsdesnap-week@pre-install.timer
+```
+
+There are provided units for snapshots a week, ```zfsdesnap-week@```, month ```zfsdesnap-month@```, and year ```zfsdesnap-year@``` old.
