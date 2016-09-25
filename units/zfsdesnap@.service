@@ -1,5 +1,0 @@
-[Unit]
-Description=Delete install and update snapshots older than a week.
-
-[Service]
-ExecStart=/usr/local/bin/zfsdesnap -p %i -d "$(/usr/bin/date -d '1 week ago' +%Y-%m-%d-%H%M%S)"
