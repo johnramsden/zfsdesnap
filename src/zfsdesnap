@@ -12,7 +12,7 @@
 # -r: Add a dataset
 # -d: Date REQUIRED
 
-# e.g. zdestsnap -n -p "pre-ins" -r "tank/home" -d "2016-06-07-155650"
+# e.g. zfsdesnap -n -p "pre-ins" -r "tank/home" -d "2016-06-07-155650"
 # This will print what will happen to all snapshots of
 # "tank/home" before"2016-06-07-155650"
 
@@ -60,10 +60,15 @@ destsnap(){
 checksnaps() {
   for snapshot in ${1}
   do
-    #echo "Checking: ${snapshot} for ${2}" # Debug
     snapdate=`echo "${snapshot}"  \
       | grep -Eo '[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}-[[:digit:]]{6}'  \
       | tr -d "-"`
+
+      # grep gets -E Interpret PATTERN as an extended regular expression.
+      # -o Show only the part of a matching line that matches PATTERN.
+      # [[:digit:]] It will fetch digit only from input.
+      # {N} It will check N number of digits in given string,
+      # i.e.: 4 for years 2 for months and days
 
     if  [ -n "${snapdate}" ] && [ "${snapdate}" -le "${destroydate}" ]; then
 
@@ -76,12 +81,6 @@ checksnaps() {
       fi
     fi
   done
-
-  # grep gets
-  # -E Interpret PATTERN as an extended regular expression.
-  # -o Show only the part of a matching line that matches PATTERN.
-  # [[:digit:]] It will fetch digit only from input.
-  # {N} It will check N number of digits in given string, i.e.: 4 for years 2 for months and days
 }
 
 #####################################
