@@ -1,4 +1,5 @@
 #!/bin/sh
+# zfsdesnap v0.1.0
 # Created by John Ramsden
 # github: johnramsden
 
@@ -56,12 +57,13 @@ destsnap(){
 # Parmaters:
 # 1: list of snapshots
 # 2: dataset to check
+# 3: date format
 # Checks all the snapshots to see if they are older than the destroy date, and if they are destroys them.
 checksnaps() {
   for snapshot in ${1}
   do
     snapdate=`echo "${snapshot}"  \
-      | grep -Eo '[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}-[[:digit:]]{6}'  \
+      | grep -Eo "${3}"  \
       | tr -d "-"`
 
       # grep gets -E Interpret PATTERN as an extended regular expression.
@@ -71,7 +73,6 @@ checksnaps() {
       # i.e.: 4 for years 2 for months and days
 
     if  [ -n "${snapdate}" ] && [ "${snapdate}" -le "${destroydate}" ]; then
-
       if beginswith "${prefix}" `echo "${snapshot}" | sed "s:${2}@::"`; then
         echo
         echo "For snapshot: ${snapshot}"
@@ -89,9 +90,10 @@ checksnaps() {
 
 ask="0"
 testmode="0"
+dateformat='[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}-[[:digit:]]{6}'
 
 # disable the verbose error handling by preceding the whole option string with a colon (:):
-while getopts ":nap:r:d:" opt; do
+while getopts ":nap:r:d:f:" opt; do
   case $opt in
     n)
       echo "Running in test mode, will not destroy anything"
@@ -113,6 +115,10 @@ while getopts ":nap:r:d:" opt; do
       echo "Date: ${OPTARG}"
       datebefore="${OPTARG}"
       ;;
+    f)
+      echo "Date format: ${OPTARG}"
+      dateformat="${OPTARG}"
+      ;;
     \?)
       echo "Invalid option: -${OPTARG}" >&2
       exit
@@ -120,23 +126,33 @@ while getopts ":nap:r:d:" opt; do
   esac
 done
 
-echo "${datebefore+set}"
+echo ${datebefore} | grep -Eo "${dateformat}"
+acceptable_date=`echo ${datebefore} | grep -Eo "${dateformat}"`
 
-if [ -n "${datebefore+set}" ]; then
-  echo "Destroy before date was set to ${datebefore}"
-  echo "Removing hyphens"
-  destroydate=`echo "${datebefore}"  | tr -d "-"`
-  echo "Destroydate: ${destroydate}"
+# Make sure date format checks out
+if [ -n "${acceptable_date}" ]; then
+  echo "Date ${acceptable_date} accepted"
 
-  if [ -n "${dataset+set}" ]; then
-    echo "Running on dataset ${dataset}"
-    snaps=`zfs list -H -t snapshot -r "${dataset}" | cut -f 1`
-    checksnaps "${snaps}" "${dataset}"
+  if [ -n "${datebefore+set}" ]; then
+    echo "Destroy before date was set to ${datebefore}"
+    echo "Removing hyphens"
+    destroydate=`echo "${datebefore}"  | tr -d "-"`
+    echo "Destroydate: ${destroydate}"
+
+    if [ -n "${dataset+set}" ]; then
+      echo "Running on dataset ${dataset}"
+      snaps=`zfs list -H -t snapshot -r "${dataset}" | cut -f 1`
+      checksnaps "${snaps}" "${dataset}" "${dateformat}"
+    else
+      echo "Running on all datasets"
+      snaps=`zfs list -H -t snapshot | cut -f 1`
+      checksnaps "${snaps}" ".*" "${dateformat}"
+    fi
   else
-    echo "Running on all datasets"
-    snaps=`zfs list -H -t snapshot | cut -f 1`
-    checksnaps "${snaps}" ".*"
+    echo 'Destroy before date was not set, please set a date using -d'
   fi
+
 else
-  echo 'Destroy before date was not set, please set a date using -d'
+  echo "Please set a proper date format in the syntax:"
+  echo '[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}-[[:digit:]]{6}'
 fi
