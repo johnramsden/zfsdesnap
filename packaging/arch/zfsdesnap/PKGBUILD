@@ -1,28 +1,24 @@
 # Maintainer: John Ramsden <streblo@ramsdenj.com.com>
-pkgname=zfsdesnap-git
-pkgver=0.1.0.r1.dab3898
+
+pkgname=zfsdesnap
+pkgver=0.1.0
 pkgrel=1
 pkgdesc="Tool to destroy all ZFS snapshots before a certain date, based off a configurable name and date format. Written in bourne shell."
 arch=('any')
 url="https://github.com/johnramsden/zfsdesnap"
 license=('BSD' 'custom:BSD 3 clause')
 depends=('zfs')
-makedepends=('git')
-source=('zfsdesnap::git+https://github.com/johnramsden/zfsdesnap#branch=master')
-md5sums=('SKIP')
-
-pkgver() {
-	cd "${srcdir}/${pkgname%-git}"
-	printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
-}
+conflicts=('zfsdesnap-git')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johnramsden/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('d1ff83c160a7565b8d71537ba393946e')
 
 package() {
-	cd "${srcdir}/${pkgname%-git}"
+	cd "${srcdir}/${pkgname}-${pkgver}"
 
 	install -d "${pkgdir}/usr/bin"
 	install -d "${pkgdir}/usr/lib/systemd/system"
 	install -d "${pkgdir}/usr/share/license/${pkgname}"
 	install -m 755 "src/zfsdesnap" "${pkgdir}/usr/bin/zfsdesnap"
-	install -m 644 "etc/*" "${pkgdir}/usr/lib/systemd/system"
+	install -m 644 etc/* "${pkgdir}/usr/lib/systemd/system"
 	install -m 755 "LICENSE.md" "${pkgdir}/usr/share/license/${pkgname}/LISCENSE"
 }
