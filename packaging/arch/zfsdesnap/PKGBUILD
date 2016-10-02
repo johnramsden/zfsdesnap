@@ -9,8 +9,8 @@ url="https://github.com/johnramsden/zfsdesnap"
 license=('BSD' 'custom:BSD 3 clause')
 depends=('zfs')
 conflicts=('zfsdesnap-git')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johnramsden/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('d1ff83c160a7565b8d71537ba393946e')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johnramsden/${pkgname}/archive/v${pkgver}.tar.gz")
+md5sums=('e905985f1697c803f9a72b24f3e8b025')
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
