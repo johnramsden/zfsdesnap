@@ -1,9 +1,9 @@
-# Maintainer: John Ramsden <streblo@ramsdenj.com.com>
+# Maintainer: John Ramsden <johnramsden [at] riseup [dot] com>
 
 pkgname=zfsdesnap-git
 #Need to replace 
 # Updated with pkgver()
-pkgver=v0.1.0.r1.69f585a
+pkgver=v0.1.0.r0.ae67785
 pkgrel=1
 pkgdesc="Tool to destroy all ZFS snapshots before a certain date, based off a configurable name and date format. Written in bourne shell."
 arch=('any')
