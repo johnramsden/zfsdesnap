@@ -1,5 +1,0 @@
-[Unit]
-Description=Delete install and update snapshots older than a year with prefix %i.
-
-[Service]
-ExecStart=/bin/sh -c '/usr/bin/zfsdesnap -p %i -d $(/usr/bin/date -d "1 year ago" +%%Y-%%m-%%d-%%H%%M%%S)'

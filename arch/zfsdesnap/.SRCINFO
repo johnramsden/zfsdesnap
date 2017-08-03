@@ -1,6 +1,6 @@
 pkgbase = zfsdesnap
 	pkgdesc = Tool to destroy all ZFS snapshots before a certain date, based off a configurable name and date format. Written in bourne shell.
-	pkgver = 0.1.0
+	pkgver = 0.1.1
 	pkgrel = 1
 	url = https://github.com/johnramsden/zfsdesnap
 	arch = any
@@ -8,8 +8,8 @@ pkgbase = zfsdesnap
 	license = custom:BSD 3 clause
 	depends = zfs
 	conflicts = zfsdesnap-git
-	source = zfsdesnap-0.1.0.tar.gz::https://github.com/johnramsden/zfsdesnap/archive/v0.1.0.tar.gz
-	md5sums = e905985f1697c803f9a72b24f3e8b025
+	source = zfsdesnap-0.1.1.tar.gz::https://github.com/johnramsden/zfsdesnap/archive/v0.1.1.tar.gz
+	md5sums = b5f1069eef06feb4dc37c46a19779f65
 
 pkgname = zfsdesnap
 

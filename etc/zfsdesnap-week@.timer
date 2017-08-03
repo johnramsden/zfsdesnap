@@ -1,9 +1,0 @@
-[Unit]
-Description=Delete week old snapshots with prefix %i weekly.
-
-[Timer]
-OnCalendar=weekly
-Persistent=true
-
-[Install]
-WantedBy=timers.target
