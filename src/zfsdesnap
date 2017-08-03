@@ -1,5 +1,5 @@
 #!/bin/sh
-# zfsdesnap v0.1.0
+# zfsdesnap v0.1.1
 # Created by John Ramsden
 # github: johnramsden
 
@@ -62,9 +62,9 @@ destsnap(){
 checksnaps() {
   for snapshot in ${1}
   do
-    snapdate=`echo "${snapshot}"  \
+    snapdate=$(echo "${snapshot}"  \
       | grep -Eo "${3}"  \
-      | tr -d "-"`
+      | tr -d "-")
 
       # grep gets -E Interpret PATTERN as an extended regular expression.
       # -o Show only the part of a matching line that matches PATTERN.
@@ -73,7 +73,7 @@ checksnaps() {
       # i.e.: 4 for years 2 for months and days
 
     if  [ -n "${snapdate}" ] && [ "${snapdate}" -le "${destroydate}" ]; then
-      if beginswith "${prefix}" `echo "${snapshot}" | sed "s:${2}@::"`; then
+      if beginswith "${prefix}" "$(echo "${snapshot}" | sed "s:${2}@::")"; then
         echo
         echo "For snapshot: ${snapshot}"
         echo "${snapdate} is older than: ${destroydate}"
@@ -127,7 +127,7 @@ while getopts ":nap:r:d:f:" opt; do
 done
 
 echo ${datebefore} | grep -Eo "${dateformat}"
-acceptable_date=`echo ${datebefore} | grep -Eo "${dateformat}"`
+acceptable_date=$(echo ${datebefore} | grep -Eo "${dateformat}")
 
 # Make sure date format checks out
 if [ -n "${acceptable_date}" ]; then
@@ -136,16 +136,16 @@ if [ -n "${acceptable_date}" ]; then
   if [ -n "${datebefore+set}" ]; then
     echo "Destroy before date was set to ${datebefore}"
     echo "Removing hyphens"
-    destroydate=`echo "${datebefore}"  | tr -d "-"`
+    destroydate=$(echo "${datebefore}"  | tr -d "-")
     echo "Destroydate: ${destroydate}"
 
     if [ -n "${dataset+set}" ]; then
       echo "Running on dataset ${dataset}"
-      snaps=`zfs list -H -t snapshot -r "${dataset}" | cut -f 1`
+      snaps=$(zfs list -H -t snapshot -r "${dataset}" | cut -f 1)
       checksnaps "${snaps}" "${dataset}" "${dateformat}"
     else
       echo "Running on all datasets"
-      snaps=`zfs list -H -t snapshot | cut -f 1`
+      snaps=$(zfs list -H -t snapshot | cut -f 1)
       checksnaps "${snaps}" ".*" "${dateformat}"
     fi
   else
